@@ -2,7 +2,7 @@ import pandas as pd
 import pickle as p1
 from sklearn import linear_model
 
-data = pd.read_csv("C:/Users/anilt/Documents/MATÉRIAS_2_SEMESTRE/Aprendizagem Automática/winequality-white.csv",
+data = pd.read_csv("./winequality-white.csv",
 sep=";")
 
 train_data=data[:1000]

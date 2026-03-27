@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn import datasets, linear_model
 from sklearn.metrics import mean_squared_error, r2_score
 
-data = pd.read_csv("C:/Users/anilt/Documents/MATÉRIAS_2_SEMESTRE/Aprendizagem Automática/winequality-white.csv",
+data = pd.read_csv("./winequality-white.csv",
 sep=";") ##-- ou-- sep=",")
 
 
