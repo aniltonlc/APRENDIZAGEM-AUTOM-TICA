@@ -50,5 +50,4 @@ with open('digits_predictor', 'wb') as PickleModelo:
 print("Modelo guardado com sucesso!")
 print("Dimensão do modelo: ", Modelo.coef_.shape)
 
-print("="*70)
 
