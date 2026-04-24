@@ -1,14 +1,33 @@
-
-
 import pandas as pd
-import joblib
+import pickle as p1
+from sklearn import linear_model
+import numpy as np
 
-test_data = pd.read_csv('optdigits.tes', header=None)
-clf = joblib.load('modelo_knn.pkl')
+with open("DigitsDadosteste.pkl", "rb") as Dt:
+    DigitsDadosteste = p1.load(Dt)
 
-# Prever o primeiro dígito do teste
-exemplo = test_data.iloc[0:1, :64]
-previsao = clf.predict(exemplo)
+digits_data_X_test = DigitsDadosteste[0]
+digits_data_Y_test = DigitsDadosteste[1]
 
-print(f"O modelo previu o dígito: {previsao[0]}")
-print(f"O dígito real era: {test_data.iloc[0, 64]}")
+print(type(digits_data_X_test))
+digits_model_loaded = p1.load(open('digits_predictor', 'rb'))
+print("Coefficients (digits): \n", digits_model_loaded.coef_)
+
+digits_y_pred = digits_model_loaded.predict(digits_data_X_test)
+
+# Arredondar previsões para o inteiro mais próximo para comparar com as classes reais dos dígitos
+digits_y_pred_rounded = np.round(digits_y_pred).astype(int)
+
+right_digits = 0
+wrong_digits = 0
+total_digits = len(digits_data_Y_test)
+
+# Assumindo que digits_data_Y_test é um DataFrame com uma única coluna 'class'
+for i in range(total_digits):
+    if digits_y_pred_rounded[i][0] == digits_data_Y_test.iloc[i, 0]:
+        right_digits += 1
+    else:
+        wrong_digits += 1
+
+print("accuraccy1 (digits)= ", right_digits / total_digits)
+print("accuraccy2 (digits)= ", wrong_digits / total_digits)
