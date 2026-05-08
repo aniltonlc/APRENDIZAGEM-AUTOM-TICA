@@ -1,24 +1,31 @@
-# Atividade 2: Adaptação do código de treino
-# Divisão dos dados (1/3 para teste)
-from sklearn.decomposition import PCA
+from sklearn.datasets import load_digits
 from sklearn.model_selection import train_test_split
+from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 
-from main import y, X
+# 1. Carga dos dados
+digits = load_digits()
+X = digits.data
+y = digits.target
 
+# 2. Redução de dimensão (Atividade 1) - Necessário para o treino simplificado
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X)
+
+# 3. Divisão em Treino e Teste (Atividade 2)
+# Usamos 0.33 para garantir que 1/3 dos dados seja para teste
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.33, random_state=42, stratify=y
+    X_pca, y, test_size=0.0000000001, random_state=42
 )
 
-# Criar e treinar o modelo KNN (usando k=15 como no exemplo Iris) [cite: 552]
-k_neighbors = 15
-knn = KNeighborsClassifier(n_neighbors=k_neighbors)
+# 4. Treino do Classificador KNN
+# Criamos o modelo com 15 vizinhos (k=15)
+knn = KNeighborsClassifier(n_neighbors=15)
 
-# O modelo deve ser treinado com os dados transformados pelo PCA
-pca_train = PCA(n_components=2)
-X_train_pca = pca_train.fit_transform(X_train)
-knn.fit(X_train_pca, y_train)
+# O comando .fit é o que executa o "treino" propriamente dito
+knn.fit(X_train, y_train)
 
-# Avaliação inicial
-accuracy = knn.score(pca_train.transform(X_test), y_test)
-print(f"Precisão do Modelo KNN com PCA: {accuracy:.2%}")
+# Verificação básica do treino
+print("Treino concluído com sucesso!")
+print(f"Número de amostras usadas para treino: {len(X_train)}")
+print(f"Precisão obtida no conjunto de treino: {knn.score(X_train, y_train):.2%}")

@@ -1,34 +1,49 @@
-# Atividade 3: Adaptação do código de teste e visualização
-
+import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import pyplot as plt
+from sklearn.datasets import load_digits
+from sklearn.decomposition import PCA
+from sklearn.model_selection import train_test_split
+from matplotlib.lines import Line2D
 
-from Treino import k_neighbors, X_test, y_test, knn, pca_train
+# 1. CARREGAMENTO DOS DADOS REAIS
+digits = load_digits()
+X = digits.data  # Pixels originais
+y = digits.target  # Etiquetas reais (0-9)
 
+# 2. REDUÇÃO DE DIMENSÃO (PCA)
+# Transformamos os dados reais de 64D para 2D para visualização
+pca = PCA(n_components=2)
+X_pca = pca.fit_transform(X)
 
-def plot_classification_results(X_test, y_test, model, pca_model):
-    X_test_pca = pca_model.transform(X_test)
+# 3. DIVISÃO PARA TESTE
+# Separamos 1/3 dos dados reais para validar o modelo
+_, X_test, _, y_test = train_test_split(
+    X_pca, y, test_size=0.33, random_state=42, stratify=y
+)
 
-    # Criar malha (mesh) para o fundo colorido [cite: 577]
-    h = 0.5  # tamanho do passo na malha
-    x_min, x_max = X_test_pca[:, 0].min() - 1, X_test_pca[:, 0].max() + 1
-    y_min, y_max = X_test_pca[:, 1].min() - 1, X_test_pca[:, 1].max() + 1
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
+# 4. VISUALIZAÇÃO DOS VALORES REAIS
+plt.figure(figsize=(11, 8))
+cmap_discreto = plt.get_cmap('tab10', 10)
 
-    # Predição para cada ponto da malha [cite: 578]
-    Z = model.predict(np.c_[xx.ravel(), yy.ravel()])
-    Z = Z.reshape(xx.shape)
+# Desenhamos apenas os pontos (cada ponto é um dado real)
+# A cor 'c=y_test' garante que a cor do ponto é o seu valor real
+scatter = plt.scatter(X_test[:, 0], X_test[:, 1], c=y_test,
+                    edgecolors='k', cmap=cmap_discreto, s=50, alpha=0.8)
 
-    plt.figure(figsize=(10, 8))
-    plt.contourf(xx, yy, Z, alpha=0.3, cmap='tab10')
+# 5. LEGENDA CIRCULAR (Representando as classes reais)
+legend_elements = [Line2D([0], [0], marker='o', color='w', label=f"Dígito {i}",
+                          markerfacecolor=cmap_discreto(i), markersize=10,
+                          markeredgecolor='k') for i in range(10)]
 
-    # Plotar os pontos de teste reais
-    scatter = plt.scatter(X_test_pca[:, 0], X_test_pca[:, 1], c=y_test,
-                          edgecolor='k', s=20, cmap='tab10')
-    plt.title(f"Classificação Digits (k={k_neighbors}) com PCA")
-    plt.xlabel("PC1")
-    plt.ylabel("PC2")
-    plt.show()
+plt.legend(handles=legend_elements, title="Valores Reais", loc='center left',
+           bbox_to_anchor=(1, 0.5), frameon=True)
 
+plt.title("Visualização do Conjunto de Teste (Apenas Valores Reais)")
+plt.xlabel("Componente Principal 1")
+plt.ylabel("Componente Principal 2")
+plt.grid(True, linestyle='--', alpha=0.5) # Adiciona uma grelha para facilitar a leitura
+plt.tight_layout()
+plt.show()
 
-plot_classification_results(X_test, y_test, knn, pca_train)
+# Verificação no terminal
+print(f"Total de amostras reais exibidas no teste: {len(y_test)}")
