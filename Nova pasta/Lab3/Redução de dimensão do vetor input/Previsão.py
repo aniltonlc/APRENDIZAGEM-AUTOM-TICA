@@ -27,7 +27,7 @@ knn.fit(X_train, y_train)
 print("=== SISTEMA DE PREVISÃO DE DÍGITOS ===")
 
 # Selecionamos uma amostra do conjunto de teste pelo índice
-indice_escolhido = 0
+indice_escolhido = 6
 amostra_2d = [X_test[indice_escolhido]] # Envolvemos em [] para criar matriz 2D
 
 # O modelo faz a previsão usando a lista de lista [[x, y]]
@@ -41,7 +41,7 @@ confianca = np.max(probabilidades) * 100
 # 5. APRESENTAÇÃO DOS RESULTADOS
 print(f"\nDados da Amostra (Índice {indice_escolhido}):")
 print(f"-> Coordenadas (X, Y): {amostra_2d[0]}")
-print(f"-> Valor REAL (Gabarito): {y_test[indice_escolhido]}")
+#print(f"-> Valor REAL (Gabarito): {y_test[indice_escolhido]}")
 print(f"-> Valor PREVISTO pelo KNN: {previsao[0]}")
 print(f"-> Grau de Confiança: {confianca:.2f}%")
 

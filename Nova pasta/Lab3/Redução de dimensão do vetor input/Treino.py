@@ -15,7 +15,7 @@ X_pca = pca.fit_transform(X)
 # 3. Divisão em Treino e Teste (Atividade 2)
 # Usamos 0.33 para garantir que 1/3 dos dados seja para teste
 X_train, X_test, y_train, y_test = train_test_split(
-    X_pca, y, test_size=0.0000000001, random_state=42
+    X_pca, y, test_size=0.01, random_state=42
 )
 
 # 4. Treino do Classificador KNN
